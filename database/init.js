@@ -4,13 +4,17 @@ const glob = require('glob')
 const { resolve } = require('path')
 
 mongoose.Promise = global.Promise
+
+// ! 连接数据库
 exports.connect = ()=> {
-    // 连接数据库
+
+    // 初次连接
     mongoose.connect(db)
 
     // 连接次数初始化
     let maxConnectTimes = 0
 
+    // 连接状态管理
     return  new Promise((resolve,reject)=>{
         // 增加数据库连接的事件监听 重新连接
         mongoose.connection.on('disconnected', ()=>{
@@ -44,7 +48,7 @@ exports.connect = ()=> {
     })
 }
 
-// 导入所有的Schema
+// ! 导入所有的Schema模板
 exports.initSchemas = () => {
     glob.sync(resolve(__dirname,'./schema/','**/*.js')).forEach(require)
 }
